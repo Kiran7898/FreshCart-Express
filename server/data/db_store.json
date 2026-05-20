@@ -1,0 +1,327 @@
+{
+  "users": [
+    {
+      "id": "user-admin",
+      "name": "System Administrator",
+      "email": "admin@grocery.com",
+      "passwordHash": "$2b$10$g31GTXaUFqCVy/9lY.FrYe96p/trO9vleOsAVY3tC7hH0JK7l7noq",
+      "role": "admin",
+      "createdAt": "2026-05-20T07:58:51.446Z"
+    },
+    {
+      "id": "user-customer",
+      "name": "John Doe",
+      "email": "customer@grocery.com",
+      "passwordHash": "$2b$10$g31GTXaUFqCVy/9lY.FrYe96p/trO9vleOsAVY3tC7hH0JK7l7noq",
+      "role": "customer",
+      "createdAt": "2026-05-20T07:58:51.446Z"
+    },
+    {
+      "id": "user-partner",
+      "name": "Alex Rider",
+      "email": "partner@grocery.com",
+      "passwordHash": "$2b$10$g31GTXaUFqCVy/9lY.FrYe96p/trO9vleOsAVY3tC7hH0JK7l7noq",
+      "role": "partner",
+      "createdAt": "2026-05-20T07:58:51.446Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "title": "Crisp Fuji Apples",
+      "description": "Fresh premium Washington apples, handpicked and crisp.",
+      "category": "Produce",
+      "unit": "kg",
+      "basePrice": 2.99,
+      "discountPercentage": 10,
+      "batches": [
+        {
+          "batchNumber": "BAT-APP-01",
+          "manufacturedDate": "2026-05-16",
+          "expiryDate": "2026-05-25",
+          "quantity": 23
+        },
+        {
+          "batchNumber": "BAT-APP-02",
+          "manufacturedDate": "2026-05-19",
+          "expiryDate": "2026-06-14",
+          "quantity": 60
+        }
+      ],
+      "totalStock": 83,
+      "isAvailable": true,
+      "createdAt": "2026-05-20T07:58:51.447Z"
+    },
+    {
+      "id": "p2",
+      "title": "Organic Whole Milk",
+      "description": "100% pasture-raised whole milk, high-temp pasteurized.",
+      "category": "Dairy & Eggs",
+      "unit": "pcs",
+      "basePrice": 3.89,
+      "discountPercentage": 0,
+      "batches": [
+        {
+          "batchNumber": "BAT-MIL-01",
+          "manufacturedDate": "2026-05-15",
+          "expiryDate": "2026-05-22",
+          "quantity": 12
+        },
+        {
+          "batchNumber": "BAT-MIL-02",
+          "manufacturedDate": "2026-05-19",
+          "expiryDate": "2026-06-03",
+          "quantity": 40
+        }
+      ],
+      "totalStock": 52,
+      "isAvailable": true,
+      "createdAt": "2026-05-20T07:58:51.447Z"
+    },
+    {
+      "id": "p3",
+      "title": "Fresh Sourdough Bread",
+      "description": "Classic bakery-fresh crusty sourdough sliced bread loaf.",
+      "category": "Bakery",
+      "unit": "pcs",
+      "basePrice": 4.5,
+      "discountPercentage": 94,
+      "batches": [
+        {
+          "batchNumber": "BAT-ROU-01",
+          "manufacturedDate": "2026-05-18",
+          "expiryDate": "2026-05-21",
+          "quantity": 8
+        },
+        {
+          "batchNumber": "BAT-ROU-02",
+          "manufacturedDate": "2026-05-20",
+          "expiryDate": "2026-05-26",
+          "quantity": 15
+        }
+      ],
+      "totalStock": 23,
+      "isAvailable": true,
+      "createdAt": "2026-05-20T07:58:51.447Z"
+    },
+    {
+      "id": "p4",
+      "title": "Premium Ribeye Beef Steak",
+      "description": "USDA Prime grade marbling, juicy and tender cut.",
+      "category": "Meat & Seafood",
+      "unit": "kg",
+      "basePrice": 24.99,
+      "discountPercentage": 0,
+      "batches": [
+        {
+          "batchNumber": "BAT-STE-01",
+          "manufacturedDate": "2026-05-17",
+          "expiryDate": "2026-05-24",
+          "quantity": 6
+        },
+        {
+          "batchNumber": "BAT-STE-02",
+          "manufacturedDate": "2026-05-19",
+          "expiryDate": "2026-05-31",
+          "quantity": 14
+        }
+      ],
+      "totalStock": 20,
+      "isAvailable": true,
+      "createdAt": "2026-05-20T07:58:51.447Z"
+    },
+    {
+      "id": "p5",
+      "title": "Basmati Premium Rice",
+      "description": "Aromatic extra long grain aged Basmati rice.",
+      "category": "Pantry Staples",
+      "unit": "pack",
+      "basePrice": 12.99,
+      "discountPercentage": 5,
+      "batches": [
+        {
+          "batchNumber": "BAT-RIC-01",
+          "manufacturedDate": "2026-04-20",
+          "expiryDate": "2026-12-06",
+          "quantity": 100
+        }
+      ],
+      "totalStock": 100,
+      "isAvailable": true,
+      "createdAt": "2026-05-20T07:58:51.447Z"
+    },
+    {
+      "id": "p6",
+      "title": "Organic Frozen Wild Berries",
+      "description": "Individually quick-frozen mix of sweet blueberries, blackberries, and raspberries.",
+      "category": "Frozen Foods",
+      "unit": "pack",
+      "basePrice": 6.49,
+      "discountPercentage": 15,
+      "batches": [
+        {
+          "batchNumber": "BAT-FRZ-01",
+          "manufacturedDate": "2026-05-05",
+          "expiryDate": "2026-09-17",
+          "quantity": 80
+        }
+      ],
+      "totalStock": 80,
+      "isAvailable": true,
+      "createdAt": "2026-05-20T07:58:51.447Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD-98231",
+      "customerId": "user-customer",
+      "customerName": "John Doe",
+      "items": [
+        {
+          "productId": "p1",
+          "title": "Crisp Fuji Apples",
+          "unit": "kg",
+          "quantity": 2,
+          "price": 2.69
+        },
+        {
+          "productId": "p2",
+          "title": "Organic Whole Milk",
+          "unit": "pcs",
+          "quantity": 1,
+          "price": 3.89
+        }
+      ],
+      "totalPrice": 9.27,
+      "deliveryAddress": "Flat 302, Royal Residency, 12th Main Road, Indiranagar, Bengaluru - 560038",
+      "status": "Delivered",
+      "logs": [
+        {
+          "status": "Pending",
+          "timestamp": "2026-05-20T04:58:51.447Z"
+        },
+        {
+          "status": "Packed",
+          "timestamp": "2026-05-20T05:28:51.447Z"
+        },
+        {
+          "status": "Shipped",
+          "timestamp": "2026-05-20T05:58:51.447Z"
+        },
+        {
+          "status": "Out for Delivery",
+          "timestamp": "2026-05-20T06:28:51.447Z"
+        },
+        {
+          "status": "Delivered",
+          "timestamp": "2026-05-20T06:58:51.447Z"
+        }
+      ],
+      "createdAt": "2026-05-20T04:58:51.447Z"
+    },
+    {
+      "id": "ORD-44910",
+      "customerId": "user-customer",
+      "customerName": "John Doe",
+      "items": [
+        {
+          "productId": "p3",
+          "title": "Fresh Sourdough Bread",
+          "unit": "pcs",
+          "quantity": 1,
+          "price": 3.6
+        },
+        {
+          "productId": "p4",
+          "title": "Premium Ribeye Beef Steak",
+          "unit": "kg",
+          "quantity": 1,
+          "price": 24.99
+        }
+      ],
+      "totalPrice": 28.59,
+      "deliveryAddress": "Flat 302, Royal Residency, 12th Main Road, Indiranagar, Bengaluru - 560038",
+      "deliveryPartnerId": "user-partner",
+      "deliveryPartnerName": "Alex Rider",
+      "status": "Delivered",
+      "logs": [
+        {
+          "status": "Pending",
+          "timestamp": "2026-05-20T07:38:51.447Z"
+        },
+        {
+          "status": "Packed",
+          "timestamp": "2026-05-20T07:57:51.447Z"
+        },
+        {
+          "status": "Delivered",
+          "timestamp": "2026-05-20T08:27:32.098Z"
+        }
+      ],
+      "createdAt": "2026-05-20T07:38:51.447Z"
+    },
+    {
+      "id": "ORD-45396",
+      "customerId": "user-customer",
+      "customerName": "John Doe",
+      "items": [
+        {
+          "productId": "p2",
+          "title": "Organic Whole Milk",
+          "unit": "pcs",
+          "quantity": 2,
+          "price": 3.89
+        }
+      ],
+      "totalPrice": 7.78,
+      "deliveryAddress": "Flat 302, Royal Residency, 12th Main Road, Indiranagar, Bengaluru - 560038",
+      "status": "Pending",
+      "logs": [
+        {
+          "status": "Pending",
+          "timestamp": "2026-05-20T08:25:53.660Z"
+        }
+      ],
+      "createdAt": "2026-05-20T08:25:53.660Z",
+      "location": {
+        "lat": 12.9794,
+        "lng": 77.6417
+      }
+    },
+    {
+      "id": "ORD-20057",
+      "customerId": "user-customer",
+      "customerName": "John Doe",
+      "items": [
+        {
+          "productId": "p2",
+          "title": "Organic Whole Milk",
+          "unit": "pcs",
+          "quantity": 1,
+          "price": 3.89
+        },
+        {
+          "productId": "p1",
+          "title": "Crisp Fuji Apples",
+          "unit": "kg",
+          "quantity": 2,
+          "price": 2.69
+        }
+      ],
+      "totalPrice": 9.27,
+      "deliveryAddress": "Flat 302, Royal Residency, 12th Main Road, Indiranagar, Bengaluru - 560038",
+      "status": "Pending",
+      "logs": [
+        {
+          "status": "Pending",
+          "timestamp": "2026-05-20T08:39:13.016Z"
+        }
+      ],
+      "createdAt": "2026-05-20T08:39:13.016Z",
+      "location": {
+        "lat": 12.9791,
+        "lng": 77.6422
+      }
+    }
+  ]
+}

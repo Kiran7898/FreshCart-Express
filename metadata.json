@@ -1,0 +1,6 @@
+{
+  "name": "FreshCart Express",
+  "description": "Real-time full-stack grocery checkout and FEFO delivery tracker featuring Socket.IO status updates and smart expiration inventory auditing dashboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

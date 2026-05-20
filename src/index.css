@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", ui-serif, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Natural Tones custom color mappings */
+  --color-green-50: #F5F7F2;
+  --color-green-100: #E6ECCF;
+  --color-green-200: #CAD8B4;
+  --color-green-500: #5C7F53;
+  --color-green-600: #4A6741;
+  --color-green-700: #384F31;
+  --color-green-800: #273722;
+  --color-green-900: #1A2616;
+
+  --color-slate-50: #FCFAF7;
+  --color-slate-100: #F3F1ED;
+  --color-slate-200: #E6E2DC;
+  --color-slate-300: #DCD6CD;
+  --color-slate-400: #8A8479;
+  --color-slate-500: #6B655B;
+  --color-slate-600: #5C574F;
+  --color-slate-700: #2D332A;
+  --color-slate-800: #1A2616;
+  --color-slate-900: #0E150C;
+
+  --color-gray-50: #FCFAF7;
+  --color-gray-100: #F3F1ED;
+  --color-gray-200: #E6E2DC;
+  --color-gray-300: #DCD6CD;
+  --color-gray-400: #8A8479;
+  --color-gray-500: #6B655B;
+  --color-gray-600: #5C574F;
+  --color-gray-700: #2D332A;
+  --color-gray-800: #1A2616;
+  --color-gray-900: #0E150C;
+  
+  --color-amber-50: #FEF9F2;
+  --color-amber-100: #FDF3E5;
+  --color-amber-200: #FBE2C3;
+  --color-amber-600: #D97706;
+  --color-amber-750: #B45309;
+  --color-amber-800: #B45309;
+}
+
+body {
+  background-color: var(--color-slate-50);
+  color: var(--color-slate-700);
+}
