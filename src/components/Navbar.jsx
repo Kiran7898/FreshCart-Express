@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { ShoppingCart, LogOut, ShieldAlert, Truck, Home, User as UserIcon, Radio, Menu, X } from "lucide-react";
-import { useApp } from "../contexts/AppContext.tsx";
+import { useApp } from "../contexts/AppContext.jsx";
 
-interface NavbarProps {
-  currentView: string;
-  setView: (view: string) => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ currentView, setView }) => {
+export const Navbar = ({ currentView, setView }) => {
   const { user, logout, cart, socketConnected } = useApp();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -304,4 +299,5 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setView }) => {
     </nav>
   );
 };
+
 export default Navbar;

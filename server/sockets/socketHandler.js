@@ -1,11 +1,9 @@
-import { Server, Socket } from "socket.io";
-
-export default function registerSocketHandler(io: Server) {
-  io.on("connection", (socket: Socket) => {
+export default function registerSocketHandler(io) {
+  io.on("connection", (socket) => {
     console.log(`Socket connection handshake verified: ${socket.id}`);
 
     // Join a client into a designated order room for isolated updates
-    socket.on("joinOrderRoom", (orderId: string) => {
+    socket.on("joinOrderRoom", (orderId) => {
       socket.join(String(orderId));
       console.log(`Client [${socket.id}] joined order tracking channel: ${orderId}`);
     });

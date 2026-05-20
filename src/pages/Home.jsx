@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Search, SlidersHorizontal, RefreshCw, AlertCircle, Sparkles } from "lucide-react";
-import { useApp } from "../contexts/AppContext.tsx";
-import { Product } from "../types.ts";
-import { ProductCard } from "../components/ProductCard.tsx";
+import { useApp } from "../contexts/AppContext.jsx";
+import { ProductCard } from "../components/ProductCard.jsx";
 
-export const Home: React.FC = () => {
+export const Home = () => {
   const { catalogRefetchToken, showNotification } = useApp();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Search, filter, sorting controls state
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const [sortBy, setSortBy] = useState<string>("recent");
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("recent");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
   const categories = ["All", "Produce", "Dairy & Eggs", "Bakery", "Meat & Seafood", "Pantry Staples", "Frozen Foods"];
 
@@ -49,7 +48,7 @@ export const Home: React.FC = () => {
       } else {
         setError(output.message || "Failed to load catalog products.");
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Home fetch error:", err);
       setError("Unable to connect to service registry.");
     } finally {
@@ -222,4 +221,5 @@ export const Home: React.FC = () => {
     </div>
   );
 };
+
 export default Home;

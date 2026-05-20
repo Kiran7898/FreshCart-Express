@@ -1,20 +1,15 @@
 import React from "react";
 import { Plus, Minus, ShoppingCart, Calendar, Flame } from "lucide-react";
-import { Product, CartItem } from "../types.ts";
-import { useApp } from "../contexts/AppContext.tsx";
+import { useApp } from "../contexts/AppContext.jsx";
 
-interface ProductCardProps {
-  product: Product;
-}
-
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard = ({ product }) => {
   const { addToCart, cart, updateCartQty } = useApp();
 
   const cartItem = cart.find((item) => item.product.id === product.id);
   const netPrice = Math.round(product.basePrice * (1 - product.discountPercentage / 100) * 100) / 100;
 
   // Visual Styling for Category
-  const getCategoryStyles = (category: string) => {
+  const getCategoryStyles = (category) => {
     switch (category) {
       case "Produce":
         return "bg-green-50 text-green-700 border-green-100";
@@ -34,7 +29,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   // Stock indicator color
-  const getStockBadge = (stock: number) => {
+  const getStockBadge = (stock) => {
     if (stock <= 0) {
       return { text: "Out of Stock", class: "bg-red-50 text-red-700 border-red-100" };
     }
@@ -141,7 +136,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="border-t border-gray-100 pt-2 flex flex-col gap-1 text-[10px] text-gray-400 bg-slate-50/50 p-2 rounded-lg">
             <div className="font-semibold text-gray-500">Tracked Shelf Batches:</div>
             {product.batches && product.batches.length > 0 ? (
-              product.batches.filter(b => b.quantity > 0).map((b, i) => (
+              product.batches.filter(b => b.quantity > 0).map((b) => (
                 <div key={b.batchNumber} className="flex justify-between font-mono">
                   <span>#{b.batchNumber} (exp: {b.expiryDate})</span>
                   <span className="font-semibold text-gray-600">{b.quantity} pcs</span>

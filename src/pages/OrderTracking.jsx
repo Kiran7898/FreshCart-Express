@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { Package, Truck, Compass, CheckCircle, Radio, Clock, AlertCircle, ShoppingBag, MapPin, UserCheck, Shield } from "lucide-react";
-import { useApp } from "../contexts/AppContext.tsx";
-import { Order } from "../types.ts";
+import { Package, Truck, Compass, CheckCircle, Radio, Clock, AlertCircle, ShoppingBag, MapPin } from "lucide-react";
+import { useApp } from "../contexts/AppContext.jsx";
 
-interface OrderTrackingProps {
-  selectedOrderId: string | null;
-  setSelectedOrderId: (id: string | null) => void;
-}
-
-export const OrderTracking: React.FC<OrderTrackingProps> = ({ selectedOrderId, setSelectedOrderId }) => {
+export const OrderTracking = ({ selectedOrderId, setSelectedOrderId }) => {
   const { user, token, getAuthHeaders, showNotification } = useApp();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [currentOrder, setCurrentOrder] = useState<Order | null>(null);
-  const [logs, setLogs] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentOrder, setCurrentOrder] = useState(null);
+  const [logs, setLogs] = useState([]);
+  const [error, setError] = useState(null);
 
   // Status index helper
   const statusSteps = ["Pending", "Packed", "Shipped", "Out for Delivery", "Delivered"];
@@ -32,17 +26,17 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ selectedOrderId, s
         // Highlight first order if none selected or if selected is missing
         if (output.data.length > 0) {
           if (selectedOrderId) {
-            const matched = output.data.find((o: any) => o.id === selectedOrderId);
+            const matched = output.data.find((o) => o.id === selectedOrderId);
             if (matched) {
               setCurrentOrder(matched);
-              setLogs(matched.logs.map((l: any) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
+              setLogs(matched.logs.map((l) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
             } else {
               setCurrentOrder(output.data[0]);
-              setLogs(output.data[0].logs.map((l: any) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
+              setLogs(output.data[0].logs.map((l) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
             }
           } else {
             setCurrentOrder(output.data[0]);
-            setLogs(output.data[0].logs.map((l: any) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
+            setLogs(output.data[0].logs.map((l) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
           }
         }
       } else {
@@ -82,7 +76,7 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ selectedOrderId, s
     });
 
     // Listen to real-time status changes
-    socket.on("orderStatusChanged", (data: { orderId: string; status: any; location?: any; updatedAt: string }) => {
+    socket.on("orderStatusChanged", (data) => {
       console.log("Real-time WS order status changed received:", data);
       
       if (data.orderId === currentOrder.id) {
@@ -111,13 +105,13 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ selectedOrderId, s
     };
   }, [currentOrder?.id]);
 
-  const selectOrder = (order: Order) => {
+  const selectOrder = (order) => {
     setSelectedOrderId(order.id);
     setCurrentOrder(order);
-    setLogs(order.logs.map((l: any) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
+    setLogs(order.logs.map((l) => `[Recorded] Order moved to status ${l.status} at ${new Date(l.timestamp).toLocaleTimeString()}`));
   };
 
-  const getStepIcon = (step: string) => {
+  const getStepIcon = (step) => {
     switch (step) {
       case "Pending":
         return <ShoppingBag className="w-5 h-5" />;
@@ -282,7 +276,7 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ selectedOrderId, s
                   <div>
                     <div className="text-gray-400 text-[10px] uppercase font-bold">Assigned Courier Runner</div>
                     {currentOrder.deliveryPartnerId ? (
-                      <div className="flex items-center gap-2 mt-1 bg-white border border-slate-150 rounded-lg p-2 w-max">
+                      <div className="flex items-center gap-2 mt-1 bg-white border border-slate-150 rounded-lg p-2 w-max animate-fade">
                         <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 text-xs font-extrabold">
                           🚲
                         </div>
@@ -357,4 +351,5 @@ export const OrderTracking: React.FC<OrderTrackingProps> = ({ selectedOrderId, s
     </div>
   );
 };
+
 export default OrderTracking;

@@ -7,10 +7,10 @@ import dotenv from "dotenv";
 // Load environment configurations
 dotenv.config();
 
-import authRoutes from "./server/routes/authRoutes.ts";
-import productRoutes from "./server/routes/productRoutes.ts";
-import orderRoutes from "./server/routes/orderRoutes.ts";
-import registerSocketHandler from "./server/sockets/socketHandler.ts";
+import authRoutes from "./server/routes/authRoutes.js";
+import productRoutes from "./server/routes/productRoutes.js";
+import orderRoutes from "./server/routes/orderRoutes.js";
+import registerSocketHandler from "./server/sockets/socketHandler.js";
 
 async function startServer() {
   const app = express();

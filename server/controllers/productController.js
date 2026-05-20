@@ -1,8 +1,7 @@
-import { Request, Response } from "express";
-import { dbStore, Product, Batch } from "../config/db.ts";
+import { dbStore } from "../config/db.js";
 
 // Utility to calculate Expiry Risk Factor (ERF)
-export const calculateERF = (quantity: number, expiryDateStr: string): { daysRemaining: number; erf: number } => {
+export const calculateERF = (quantity, expiryDateStr) => {
   const today = new Date();
   const expiry = new Date(expiryDateStr);
   const diffTime = expiry.getTime() - today.getTime();
@@ -12,7 +11,7 @@ export const calculateERF = (quantity: number, expiryDateStr: string): { daysRem
 };
 
 // 1. Browse & filter products with pagination, search, category, pricing limits, sorting
-export const getProducts = async (req: Request, res: Response) => {
+export const getProducts = async (req, res) => {
   try {
     const { search, category, minPrice, maxPrice, sortBy, order, page = "1", limit = "12" } = req.query;
 
@@ -34,7 +33,7 @@ export const getProducts = async (req: Request, res: Response) => {
     }
 
     // Dynamic price calculation helper (net price after discount)
-    const getNetPrice = (p: Product) => {
+    const getNetPrice = (p) => {
       return p.basePrice * (1 - p.discountPercentage / 100);
     };
 
@@ -91,7 +90,7 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 // 2. Fetch unique product information
-export const getProductById = async (req: Request, res: Response) => {
+export const getProductById = async (req, res) => {
   try {
     const products = dbStore.getProducts();
     const product = products.find((p) => p.id === req.params.id);
@@ -108,7 +107,7 @@ export const getProductById = async (req: Request, res: Response) => {
 };
 
 // 3. Admin: Create product with batches
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (req, res) => {
   try {
     const { title, description, category, unit, basePrice, discountPercentage, batches } = req.body;
 
@@ -118,7 +117,7 @@ export const createProduct = async (req: Request, res: Response) => {
     }
 
     const sanitizedBatches = Array.isArray(batches)
-      ? batches.map((b: any) => ({
+      ? batches.map((b) => ({
           batchNumber: String(b.batchNumber || "BAT-" + Math.random().toString(36).substr(2, 6).toUpperCase()),
           manufacturedDate: String(b.manufacturedDate || new Date().toISOString().split("T")[0]),
           expiryDate: String(b.expiryDate),
@@ -126,7 +125,7 @@ export const createProduct = async (req: Request, res: Response) => {
         }))
       : [];
 
-    const newProduct: Product = {
+    const newProduct = {
       id: "p-" + Math.random().toString(36).substr(2, 9),
       title,
       description,
@@ -156,7 +155,7 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 
 // 4. Admin: Update product fields and batches
-export const updateProduct = async (req: Request, res: Response) => {
+export const updateProduct = async (req, res) => {
   try {
     const products = dbStore.getProducts();
     const product = products.find((p) => p.id === req.params.id);
@@ -175,7 +174,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     if (basePrice !== undefined) product.basePrice = parseFloat(basePrice);
     if (discountPercentage !== undefined) product.discountPercentage = parseFloat(discountPercentage);
     if (batches !== undefined && Array.isArray(batches)) {
-      product.batches = batches.map((b: any) => ({
+      product.batches = batches.map((b) => ({
         batchNumber: String(b.batchNumber),
         manufacturedDate: String(b.manufacturedDate),
         expiryDate: String(b.expiryDate),
@@ -199,7 +198,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 // 5. Admin: Delete product
-export const deleteProduct = async (req: Request, res: Response) => {
+export const deleteProduct = async (req, res) => {
   try {
     const success = dbStore.deleteProduct(req.params.id);
     if (!success) {
@@ -219,14 +218,14 @@ export const deleteProduct = async (req: Request, res: Response) => {
 };
 
 // 6. Admin Inventory Audit (Filtering batches expiring within 30 days and sorting by Expiry Risk Factor)
-export const getExpiryAudit = async (req: Request, res: Response) => {
+export const getExpiryAudit = async (req, res) => {
   try {
     const today = new Date();
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(today.getDate() + 30);
 
     const products = dbStore.getProducts();
-    const auditResults: any[] = [];
+    const auditResults = [];
 
     products.forEach((product) => {
       product.batches.forEach((batch) => {
@@ -267,7 +266,7 @@ export const getExpiryAudit = async (req: Request, res: Response) => {
 };
 
 // 7. Admin Quick Clearance Discount: apply automated/set discount rate to clear expiring stock
-export const applyExpiryDiscount = async (req: Request, res: Response) => {
+export const applyExpiryDiscount = async (req, res) => {
   try {
     const { productId, discountPercentage } = req.body;
 

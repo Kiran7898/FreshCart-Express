@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import { AppProvider, useApp } from "./contexts/AppContext.tsx";
-import { Navbar } from "./components/Navbar.tsx";
-import { Home } from "./pages/Home.tsx";
-import { Cart } from "./pages/Cart.tsx";
-import { OrderTracking } from "./pages/OrderTracking.tsx";
-import { PartnerPanel } from "./pages/PartnerPanel.tsx";
-import { AdminInventory } from "./pages/AdminInventory.tsx";
-import { Auth } from "./pages/Auth.tsx";
+import { AppProvider, useApp } from "./contexts/AppContext.jsx";
+import { Navbar } from "./components/Navbar.jsx";
+import { Home } from "./pages/Home.jsx";
+import { Cart } from "./pages/Cart.jsx";
+import { OrderTracking } from "./pages/OrderTracking.jsx";
+import { PartnerPanel } from "./pages/PartnerPanel.jsx";
+import { AdminInventory } from "./pages/AdminInventory.jsx";
+import { Auth } from "./pages/Auth.jsx";
 import { Radio, ShoppingCart } from "lucide-react";
 
-const MainAppContent: React.FC = () => {
+const MainAppContent = () => {
   const { user, notification, cart } = useApp();
-  const [view, setView] = useState<string>("home");
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [view, setView] = useState("home");
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   // Guard routing internally for high integrity
-  const navigateToView = (targetView: string) => {
+  const navigateToView = (targetView) => {
     if (targetView === "cart" && !user) {
       setView("auth");
       return;

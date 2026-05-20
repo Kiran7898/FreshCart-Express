@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Truck, MapPin, PackageOpen, ClipboardCopy, Radio, Fuel, MessageSquare, AlertCircle, RefreshCw } from "lucide-react";
-import { useApp } from "../contexts/AppContext.tsx";
-import { Order } from "../types.ts";
+import { Truck, MapPin, PackageOpen, ClipboardCopy, AlertCircle, RefreshCw } from "lucide-react";
+import { useApp } from "../contexts/AppContext.jsx";
 
-export const PartnerPanel: React.FC = () => {
+export const PartnerPanel = () => {
   const { user, token, getAuthHeaders, socket, socketConnected, showNotification } = useApp();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // Track simulate interval
-  const [gpsInterval, setGpsInterval] = useState<NodeJS.Timeout | null>(null);
-  const [trackingSimulatingId, setTrackingSimulatingId] = useState<string | null>(null);
+  const [gpsInterval, setGpsInterval] = useState(null);
+  const [trackingSimulatingId, setTrackingSimulatingId] = useState(null);
 
   // 1. Fetch orders relevant for carrier delivery
   const fetchDeliveries = async () => {
@@ -49,7 +48,7 @@ export const PartnerPanel: React.FC = () => {
   }, [gpsInterval]);
 
   // 2. Claim open delivery parcel
-  const handleClaimOrder = async (orderId: string) => {
+  const handleClaimOrder = async (orderId) => {
     try {
       const response = await fetch(`/api/orders/${orderId}/claim`, {
         method: "PUT",
@@ -71,9 +70,9 @@ export const PartnerPanel: React.FC = () => {
   };
 
   // 3. Promote Status Transition
-  const handleUpdateStatus = async (orderId: string, nextStatus: string, customCoords?: { lat: number; lng: number }) => {
+  const handleUpdateStatus = async (orderId, nextStatus, customCoords) => {
     try {
-      const bodyPayload: any = { status: nextStatus };
+      const bodyPayload = { status: nextStatus };
       if (customCoords) {
         bodyPayload.lat = customCoords.lat;
         bodyPayload.lng = customCoords.lng;
@@ -112,7 +111,7 @@ export const PartnerPanel: React.FC = () => {
   };
 
   // 4. GPS Simulated Trip coordinates incrementor
-  const startGpsSimulation = (order: Order) => {
+  const startGpsSimulation = (order) => {
     if (gpsInterval) {
       clearInterval(gpsInterval);
       setGpsInterval(null);
@@ -165,7 +164,7 @@ export const PartnerPanel: React.FC = () => {
 
   if (loading && orders.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center gap-2">
+      <div className="flex flex-col items-center justify-center py-20 text-center gap-2 animate-fade">
         <Truck className="w-8 h-8 text-green-600 animate-bounce" />
         <p className="text-sm font-semibold text-gray-400">Syncing order dispatcher cargo...</p>
       </div>
@@ -178,7 +177,7 @@ export const PartnerPanel: React.FC = () => {
       {/* Overview header stats card */}
       <div className="relative rounded-3xl bg-amber-50 border border-amber-250 p-8 shadow-xs flex flex-col sm:flex-row justify-between items-center gap-6 mb-2">
         <div className="text-left max-w-xl">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-amber-700 border border-amber-200 text-xs font-bold uppercase tracking-wider mb-4 shadow-xs">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-amber-700 border border-amber-200 text-xs font-bold uppercase tracking-wider mb-4 shadow-xs font-sans">
             <ClipboardCopy className="w-3.5 h-3.5" />
             <span>Active Dispatch Runner Hub</span>
           </span>
@@ -190,7 +189,7 @@ export const PartnerPanel: React.FC = () => {
 
         <button
           onClick={fetchDeliveries}
-          className="bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 p-2.5 px-4.5 rounded-xl transition-all shadow-xs flex items-center justify-center gap-2 text-xs font-bold cursor-pointer self-start sm:self-auto"
+          className="bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 p-2.5 px-4.5 rounded-xl transition-all shadow-xs flex items-center justify-center gap-2 text-xs font-bold cursor-pointer self-start sm:self-auto border-0"
           id="partner-reload-btn"
         >
           <RefreshCw className="w-4 h-4" />
@@ -208,10 +207,10 @@ export const PartnerPanel: React.FC = () => {
           </h3>
 
           {unassignedOrders.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl border border-gray-150 p-5">
+            <div className="text-center py-12 bg-white rounded-xl border border-gray-150 p-5 font-sans">
               <AlertCircle className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-              <div className="font-bold text-slate-500 text-sm">No Unclaimed Packages</div>
-              <p className="text-gray-400 text-xs">Our storage hubs currently have no unassigned Packed orders. Check back shortly.</p>
+              <div className="font-bold text-slate-500 text-sm font-sans">No Unclaimed Packages</div>
+              <p className="text-gray-400 text-xs font-sans">Our storage hubs currently have no unassigned Packed orders. Check back shortly.</p>
             </div>
           ) : (
             <div className="space-y-3" id="unassigned-parcels-list">
@@ -345,13 +344,13 @@ export const PartnerPanel: React.FC = () => {
 
                       {/* GPS Route movement mock simulation */}
                       {o.status === "Out for Delivery" && (
-                        <div className="mt-3 bg-slate-100 border border-slate-200 rounded-2xl p-4 text-slate-700 text-xs flex justify-between items-center shadow-xs">
+                        <div className="mt-3 bg-slate-100 border border-slate-200 rounded-2xl p-4 text-slate-700 text-xs flex justify-between items-center shadow-xs animate-fade">
                           <div className="flex items-center gap-3">
                             <span className="relative flex h-2 w-2">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
                             </span>
-                            <div className="flex flex-col text-left">
+                            <div className="flex flex-col text-left font-sans">
                               <span className="text-[10px] text-slate-400 font-extrabold tracking-wider uppercase leading-none">GPS ROUTE SIMULATOR</span>
                               <span className="text-[9px] text-slate-500 font-semibold mt-1.5 leading-none truncate max-w-[120px] sm:max-w-[180px]">
                                 Coords: {o.location?.lat?.toFixed(5) || 12.978}, {o.location?.lng?.toFixed(5) || 77.64}
@@ -361,9 +360,7 @@ export const PartnerPanel: React.FC = () => {
 
                           <button
                             onClick={() => startGpsSimulation(o)}
-                            className={`px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white font-extrabold text-[10px] rounded-lg border-0 cursor-pointer transition-all ${
-                              isGpsSimulating ? "bg-red-605 hover:bg-red-700" : ""
-                            }`}
+                            className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white font-extrabold text-[10px] rounded-lg border-0 cursor-pointer transition-all"
                             id={`btn-sim-gps-${o.id}`}
                           >
                             {isGpsSimulating ? "Pause Run" : "Simulate Live Run"}
@@ -382,4 +379,5 @@ export const PartnerPanel: React.FC = () => {
     </div>
   );
 };
+
 export default PartnerPanel;

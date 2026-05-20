@@ -1,13 +1,11 @@
-import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { dbStore, User } from "../config/db.ts";
-import { AuthenticatedRequest } from "../middleware/authMiddleware.ts";
+import { dbStore } from "../config/db.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "grocery_marketplace_secure_token_secret_123";
 
 // Generate JWT Helper
-const generateToken = (user: User) => {
+const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, name: user.name, email: user.email, role: user.role },
     JWT_SECRET,
@@ -15,7 +13,7 @@ const generateToken = (user: User) => {
   );
 };
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -40,7 +38,7 @@ export const signup = async (req: Request, res: Response) => {
     const salt = bcrypt.genSaltSync(10);
     const passwordHash = bcrypt.hashSync(password, salt);
 
-    const newUser: User = {
+    const newUser = {
       id: "usr-" + Math.random().toString(36).substr(2, 9),
       name,
       email: email.toLowerCase(),
@@ -60,13 +58,13 @@ export const signup = async (req: Request, res: Response) => {
         role: newUser.role,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({ message: "Server error during registration" });
   }
 };
 
-export const signin = async (req: Request, res: Response) => {
+export const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -98,13 +96,13 @@ export const signin = async (req: Request, res: Response) => {
         role: user.role,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Signin error:", error);
     res.status(500).json({ message: "Server error during authentication" });
   }
 };
 
-export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
+export const getProfile = async (req, res) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: "Not authenticated" });
@@ -127,7 +125,7 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
         role: user.role,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Get Profile error:", error);
     res.status(500).json({ message: "Server error retrieving profile" });
   }

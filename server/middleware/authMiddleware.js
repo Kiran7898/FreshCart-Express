@@ -1,18 +1,8 @@
-import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "grocery_marketplace_secure_token_secret_123";
 
-export interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-    role: "customer" | "partner" | "admin";
-  };
-}
-
-export function protect(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export function protect(req, res, next) {
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
@@ -24,12 +14,7 @@ export function protect(req: AuthenticatedRequest, res: Response, next: NextFunc
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      id: string;
-      name: string;
-      email: string;
-      role: "customer" | "partner" | "admin";
-    };
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     req.user = decoded;
     next();
@@ -38,8 +23,8 @@ export function protect(req: AuthenticatedRequest, res: Response, next: NextFunc
   }
 }
 
-export function authorize(...roles: Array<"customer" | "partner" | "admin">) {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export function authorize(...roles) {
+  return (req, res, next) => {
     if (!req.user) {
       res.status(401).json({ message: "Not authenticated" });
       return;

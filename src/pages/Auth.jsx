@@ -1,23 +1,19 @@
 import React, { useState } from "react";
-import { LogIn, UserPlus, Mail, Lock, User, Radio, Shield, ClipboardCheck, Sparkles } from "lucide-react";
-import { useApp } from "../contexts/AppContext.tsx";
+import { LogIn, UserPlus, Mail, Lock, User, ClipboardCheck, Sparkles } from "lucide-react";
+import { useApp } from "../contexts/AppContext.jsx";
 
-interface AuthProps {
-  setView: (view: string) => void;
-}
-
-export const Auth: React.FC<AuthProps> = ({ setView }) => {
+export const Auth = ({ setView }) => {
   const { login, showNotification } = useApp();
-  const [isLoginMode, setIsLoginMode] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Form Fields
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [role, setRole] = useState<"customer" | "partner">("customer");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("customer");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password || (!isLoginMode && !name)) {
       showNotification("Please supply all required authentication fields.");
@@ -62,7 +58,7 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
   };
 
   // Helper tester pre-fill logins
-  const prefillTestRole = (roleType: "admin" | "customer" | "partner") => {
+  const prefillTestRole = (roleType) => {
     if (roleType === "admin") {
       setEmail("admin@grocery.com");
       setPassword("password123");
@@ -79,7 +75,7 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
 
   return (
     <div className="max-w-md mx-auto my-10 bg-white border border-gray-150 rounded-2xl p-6 shadow-sm flex flex-col gap-6 text-left animate-fade">
-      <div className="text-center">
+      <div className="text-center font-sans">
         <span className="p-3 bg-green-50 rounded-full inline-block text-2xl mb-3">🛒</span>
         <h2 className="text-2xl font-serif font-black text-slate-800 tracking-tight leading-none mb-1.5">
           {isLoginMode ? "Welcome Back" : "Create Account"}
@@ -92,7 +88,7 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
       </div>
 
       {/* Main Authentication Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 font-sans">
         {!isLoginMode && (
           <div className="flex flex-col gap-1 text-[11px] font-bold text-slate-500">
             <label className="uppercase tracking-wider flex items-center gap-1.5">
@@ -156,7 +152,7 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
                 onClick={() => setRole("customer")}
                 className={`py-2 px-3 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
                   role === "customer"
-                    ? "bg-green-50 text-green-700 border-green-400 font-extrabold"
+                    ? "bg-green-50 text-green-700 border-green-400 font-extrabold text-[#15803d]"
                     : "bg-white text-gray-500 border-gray-200"
                 }`}
                 id="role-customer-btn"
@@ -168,7 +164,7 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
                 onClick={() => setRole("partner")}
                 className={`py-2 px-3 text-xs font-bold rounded-lg border cursor-pointer transition-all ${
                   role === "partner"
-                    ? "bg-orange-50 text-orange-750 border-orange-400 font-extrabold"
+                    ? "bg-orange-50 text-orange-750 border-orange-400 font-extrabold text-[#c2410c]"
                     : "bg-white text-gray-500 border-gray-200"
                 }`}
                 id="role-partner-btn"
@@ -205,14 +201,14 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
       {/* Switch auth mode trigger */}
       <button
         onClick={() => setIsLoginMode(!isLoginMode)}
-        className="text-xs font-bold text-slate-400 hover:text-green-650 transition-colors bg-transparent border-0 cursor-pointer text-center leading-none"
+        className="text-xs font-bold text-slate-400 hover:text-green-650 transition-colors bg-transparent border-0 cursor-pointer text-center leading-none font-sans"
         id="auth-mode-toggle-btn"
       >
         {isLoginMode ? "Need an account? Sign up here" : "Already have an account? Sign in here"}
       </button>
 
       {/* Quick Tester accounts section */}
-      <div className="border-t border-slate-200 pt-4 flex flex-col gap-2">
+      <div className="border-t border-slate-200 pt-4 flex flex-col gap-2 font-sans">
         <div className="text-[10px] uppercase font-black text-slate-400 flex items-center gap-1.5 justify-center">
           <Sparkles className="w-3.5 h-3.5 text-slate-400" />
           <span>Quick Access Profiles</span>
@@ -237,7 +233,7 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
 
           <button
             onClick={() => prefillTestRole("admin")}
-            className="py-1.5 px-2 bg-slate-50 hover:bg-indigo-50 text-[10px] font-black rounded-lg border border-slate-200 hover:border-indigo-200 text-slate-600 hover:text-indigo-700 transition-all cursor-pointer truncate"
+            className="py-1.5 px-1 bg-slate-50 hover:bg-indigo-50 text-[10px] font-black rounded-lg border border-slate-200 hover:border-indigo-200 text-slate-600 hover:text-indigo-700 transition-all cursor-pointer truncate"
             id="test-login-admin"
           >
             🛡️ Admin Log
@@ -247,4 +243,5 @@ export const Auth: React.FC<AuthProps> = ({ setView }) => {
     </div>
   );
 };
+
 export default Auth;

@@ -1,36 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { io, Socket } from "socket.io-client";
-import { User, Product, CartItem, Order, OrderLog } from "../types.ts";
+import { io } from "socket.io-client";
 
-interface AppContextProps {
-  user: User | null;
-  token: string | null;
-  cart: CartItem[];
-  socket: Socket | null;
-  socketConnected: boolean;
-  notification: string | null;
-  login: (token: string, user: User) => void;
-  logout: () => void;
-  addToCart: (product: Product, qty?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateCartQty: (productId: string, qty: number) => void;
-  clearCart: () => void;
-  showNotification: (msg: string) => void;
-  getAuthHeaders: () => { Authorization: string };
-  triggerRefetchCatalog: () => void;
-  catalogRefetchToken: number;
-}
+const AppContext = createContext(undefined);
 
-const AppContext = createContext<AppContextProps | undefined>(undefined);
-
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [socketConnected, setSocketConnected] = useState<boolean>(false);
-  const [notification, setNotification] = useState<string | null>(null);
-  const [catalogRefetchToken, setCatalogRefetchToken] = useState<number>(0);
+export const AppProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const [catalogRefetchToken, setCatalogRefetchToken] = useState(0);
 
   // 1. Initial State Auto-Load from LocalStorage
   useEffect(() => {
@@ -73,7 +53,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
 
     // Listen to store-wide live inventory changes
-    socketInstance.on("inventoryUpdate", (data: { productId: string; totalStock: number; deleted?: boolean }) => {
+    socketInstance.on("inventoryUpdate", (data) => {
       console.log("Live inventory sync event received:", data);
       
       // Update our cart if stock drops below selected amount
@@ -121,14 +101,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCatalogRefetchToken((prev) => prev + 1);
   };
 
-  const showNotification = (msg: string) => {
+  const showNotification = (msg) => {
     setNotification(msg);
     setTimeout(() => {
       setNotification((curr) => (curr === msg ? null : curr));
     }, 4500);
   };
 
-  const login = (jwtToken: string, userDetails: User) => {
+  const login = (jwtToken, userDetails) => {
     setToken(jwtToken);
     setUser(userDetails);
     localStorage.setItem("grocery_jwt", jwtToken);
@@ -146,7 +126,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showNotification("You have been signed out successfully.");
   };
 
-  const addToCart = (product: Product, qty: number = 1) => {
+  const addToCart = (product, qty = 1) => {
     // If stock is zero, reject
     if (product.totalStock <= 0) {
       showNotification("This product is currently out of stock.");
@@ -182,7 +162,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = (productId) => {
     setCart((prevCart) => {
       const target = prevCart.find((i) => i.product.id === productId);
       if (target) {
@@ -192,7 +172,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  const updateCartQty = (productId: string, qty: number) => {
+  const updateCartQty = (productId, qty) => {
     if (qty <= 0) {
       removeFromCart(productId);
       return;

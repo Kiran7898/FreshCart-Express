@@ -5,84 +5,20 @@ import bcrypt from "bcryptjs";
 const DATA_DIR = path.join(process.cwd(), "server", "data");
 const STORE_FILE = path.join(DATA_DIR, "db_store.json");
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  passwordHash: string;
-  role: "customer" | "partner" | "admin";
-  createdAt: string;
-}
-
-interface Batch {
-  batchNumber: string;
-  manufacturedDate: string;
-  expiryDate: string;
-  quantity: number;
-}
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  category: "Produce" | "Dairy & Eggs" | "Bakery" | "Meat & Seafood" | "Pantry Staples" | "Frozen Foods";
-  unit: "kg" | "g" | "L" | "ml" | "pcs" | "pack";
-  basePrice: number;
-  discountPercentage: number;
-  batches: Batch[];
-  totalStock: number;
-  isAvailable: boolean;
-  createdAt: string;
-}
-
-interface OrderLog {
-  status: string;
-  timestamp: string;
-}
-
-interface OrderItem {
-  productId: string;
-  title: string;
-  unit: string;
-  quantity: number;
-  price: number;
-}
-
-interface Order {
-  id: string;
-  customerId: string;
-  customerName: string;
-  items: OrderItem[];
-  totalPrice: number;
-  deliveryAddress: string;
-  deliveryPartnerId?: string;
-  deliveryPartnerName?: string;
-  status: "Pending" | "Packed" | "Shipped" | "Out for Delivery" | "Delivered";
-  logs: OrderLog[];
-  location?: { lat: number; lng: number };
-  createdAt: string;
-}
-
-interface DBStore {
-  users: User[];
-  products: Product[];
-  orders: Order[];
-}
-
-const defaultStore: DBStore = {
+const defaultStore = {
   users: [],
   products: [],
   orders: [],
 };
 
 class LocalDatabase {
-  private data: DBStore = { ...defaultStore };
+  data = { ...defaultStore };
 
   constructor() {
     this.init();
   }
 
-  private init() {
+  init() {
     try {
       if (!fs.existsSync(DATA_DIR)) {
         fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -134,7 +70,7 @@ class LocalDatabase {
       if (!this.data.products || this.data.products.length === 0) {
         console.log("Seeding default grocery catalog with multi-batch expirations...");
         
-        const makeDate = (daysOffset: number) => {
+        const makeDate = (daysOffset) => {
           const d = new Date();
           d.setDate(d.getDate() + daysOffset);
           return d.toISOString().split("T")[0]; // YYYY-MM-DD
@@ -369,8 +305,7 @@ class LocalDatabase {
     }
   }
 
-
-  private saveToDisk() {
+  saveToDisk() {
     try {
       fs.writeFileSync(STORE_FILE, JSON.stringify(this.data, null, 2), "utf-8");
     } catch (error) {
@@ -380,11 +315,11 @@ class LocalDatabase {
 
   // --- Collection Queries & Mutators ---
 
-  public getUsers(): User[] {
+  getUsers() {
     return this.data.users;
   }
 
-  public saveUser(user: User) {
+  saveUser(user) {
     const existsIndex = this.data.users.findIndex((u) => u.id === user.id);
     if (existsIndex >= 0) {
       this.data.users[existsIndex] = user;
@@ -394,11 +329,11 @@ class LocalDatabase {
     this.saveToDisk();
   }
 
-  public getProducts(): Product[] {
+  getProducts() {
     return this.data.products;
   }
 
-  public saveProduct(product: Product) {
+  saveProduct(product) {
     // Sync calculations
     product.totalStock = product.batches.reduce((sum, b) => sum + b.quantity, 0);
     product.isAvailable = product.totalStock > 0;
@@ -412,18 +347,18 @@ class LocalDatabase {
     this.saveToDisk();
   }
 
-  public deleteProduct(productId: string): boolean {
+  deleteProduct(productId) {
     const lenBefore = this.data.products.length;
     this.data.products = this.data.products.filter((p) => p.id !== productId);
     this.saveToDisk();
     return this.data.products.length < lenBefore;
   }
 
-  public getOrders(): Order[] {
+  getOrders() {
     return this.data.orders;
   }
 
-  public saveOrder(order: Order) {
+  saveOrder(order) {
     const existsIndex = this.data.orders.findIndex((o) => o.id === order.id);
     if (existsIndex >= 0) {
       this.data.orders[existsIndex] = order;
@@ -435,4 +370,3 @@ class LocalDatabase {
 }
 
 export const dbStore = new LocalDatabase();
-export type { User, Batch, Product, Order, OrderItem, OrderLog };

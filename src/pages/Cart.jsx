@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import { ShoppingCart, Trash2, ArrowRight, Home as HomeIcon, CheckCircle2, TicketPercent, Wallet, LogIn } from "lucide-react";
-import { useApp } from "../contexts/AppContext.tsx";
+import { useApp } from "../contexts/AppContext.jsx";
 
-interface CartProps {
-  setView: (view: string) => void;
-  setSelectedOrderId: (id: string) => void;
-}
-
-export const Cart: React.FC<CartProps> = ({ setView, setSelectedOrderId }) => {
+export const Cart = ({ setView, setSelectedOrderId }) => {
   const { user, cart, token, updateCartQty, removeFromCart, clearCart, getAuthHeaders, showNotification } = useApp();
-  const [deliveryAddress, setDeliveryAddress] = useState<string>("Flat 302, Royal Residency, 12th Main Road, Indiranagar, Bengaluru - 560038");
-  const [checkingOut, setCheckingOut] = useState<boolean>(false);
-  const [checkoutComplete, setCheckoutComplete] = useState<boolean>(false);
-  const [createdOrderRef, setCreatedOrderRef] = useState<any>(null);
+  const [deliveryAddress, setDeliveryAddress] = useState("Flat 302, Royal Residency, 12th Main Road, Indiranagar, Bengaluru - 560038");
+  const [checkingOut, setCheckingOut] = useState(false);
+  const [checkoutComplete, setCheckoutComplete] = useState(false);
+  const [createdOrderRef, setCreatedOrderRef] = useState(null);
 
   if (!user || !token) {
     return (
@@ -47,7 +42,7 @@ export const Cart: React.FC<CartProps> = ({ setView, setSelectedOrderId }) => {
   const deliveryFee = netTotal > 30 ? 0 : 3.99; // Free delivery over ₹30
   const finalPrice = netTotal + deliveryFee;
 
-  const handleCheckout = async (e: React.FormEvent) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
     if (cart.length === 0) return;
 
@@ -224,7 +219,7 @@ export const Cart: React.FC<CartProps> = ({ setView, setSelectedOrderId }) => {
                     <div className="flex items-center gap-2 border border-gray-200 rounded-lg p-1 bg-gray-50">
                       <button
                         onClick={() => updateCartQty(item.product.id, item.quantity - 1)}
-                        className="p-1 hover:bg-slate-200 text-slate-500 rounded bg-white border border-gray-150 shadow-xs cursor-pointer"
+                        className="p-1 hover:bg-slate-200 text-slate-500 rounded bg-white border border-gray-150 shadow-xs cursor-pointer animate-fade"
                       >
                         <Trash2 className="w-3 h-3 text-red-500" />
                       </button>
@@ -334,4 +329,5 @@ export const Cart: React.FC<CartProps> = ({ setView, setSelectedOrderId }) => {
     </div>
   );
 };
+
 export default Cart;

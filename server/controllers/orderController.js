@@ -1,9 +1,7 @@
-import { Response } from "express";
-import { dbStore, Order, OrderItem, Product } from "../config/db.ts";
-import { AuthenticatedRequest } from "../middleware/authMiddleware.ts";
+import { dbStore } from "../config/db.js";
 
 // 1. Customer Checkout (FEFO - First Expired, First Out Stock Allocation)
-export const createOrder = async (req: AuthenticatedRequest, res: Response) => {
+export const createOrder = async (req, res) => {
   try {
     const { items, deliveryAddress } = req.body; // items = [{ productId, quantity }]
 
@@ -18,12 +16,12 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     const products = dbStore.getProducts();
-    const orderItems: OrderItem[] = [];
+    const orderItems = [];
     let totalPrice = 0;
 
     // We keep a temporary log of edits we need to make to the products
     // to avoid partial stock deduction if checkout fails halfway.
-    const productUpdates: Array<{ product: Product; quantityRequested: number }> = [];
+    const productUpdates = [];
 
     // First Pass: Validate stock availability and calculate prices
     for (const item of items) {
@@ -88,10 +86,10 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response) => {
 
     totalPrice = Math.round(totalPrice * 100) / 100;
 
-    const newOrder: Order = {
+    const newOrder = {
       id: "ORD-" + Math.floor(10000 + Math.random() * 90000), // Standard 5-digit order identifier
-      customerId: req.user!.id,
-      customerName: req.user!.name,
+      customerId: req.user.id,
+      customerName: req.user.name,
       items: orderItems,
       totalPrice,
       deliveryAddress,
@@ -115,21 +113,21 @@ export const createOrder = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     res.status(201).json({ success: true, data: newOrder });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Checkout order error:", error);
     res.status(500).json({ message: "Server error finalizing order checkout" });
   }
 };
 
 // 2. Fetch Orders (Role-based isolation)
-export const getOrders = async (req: AuthenticatedRequest, res: Response) => {
+export const getOrders = async (req, res) => {
   try {
-    const role = req.user!.role;
+    const role = req.user.role;
     const orders = dbStore.getOrders();
 
     if (role === "customer") {
       // Customers look at their own active placements
-      const userOrders = orders.filter((o) => o.customerId === req.user!.id);
+      const userOrders = orders.filter((o) => o.customerId === req.user.id);
       res.json({ success: true, data: userOrders });
       return;
     }
@@ -140,7 +138,7 @@ export const getOrders = async (req: AuthenticatedRequest, res: Response) => {
       // - Pending/Packed/Shipped orders that they can claim
       const partnerOrders = orders.filter(
         (o) =>
-          o.deliveryPartnerId === req.user!.id ||
+          o.deliveryPartnerId === req.user.id ||
           ["Packed", "Shipped"].includes(o.status)
       );
       res.json({ success: true, data: partnerOrders });
@@ -160,7 +158,7 @@ export const getOrders = async (req: AuthenticatedRequest, res: Response) => {
 };
 
 // 3. Delivery Partner: Claim Order Cargo
-export const claimOrder = async (req: AuthenticatedRequest, res: Response) => {
+export const claimOrder = async (req, res) => {
   try {
     const orders = dbStore.getOrders();
     const order = orders.find((o) => o.id === req.params.orderId);
@@ -180,8 +178,8 @@ export const claimOrder = async (req: AuthenticatedRequest, res: Response) => {
       return;
     }
 
-    order.deliveryPartnerId = req.user!.id;
-    order.deliveryPartnerName = req.user!.name;
+    order.deliveryPartnerId = req.user.id;
+    order.deliveryPartnerName = req.user.name;
     order.status = "Shipped"; // Promoted to Shipped upon partner claim
     order.logs.push({ status: "Shipped", timestamp: new Date().toISOString() });
 
@@ -207,7 +205,7 @@ export const claimOrder = async (req: AuthenticatedRequest, res: Response) => {
 };
 
 // 4. Update Order Progress (packed -> shipped -> out for delivery -> delivered)
-export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response) => {
+export const updateOrderStatus = async (req, res) => {
   try {
     const { status, lat, lng } = req.body;
     const orders = dbStore.getOrders();
@@ -219,14 +217,14 @@ export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response
     }
 
     // Role verification guards: Customers cannot change status
-    const role = req.user!.role;
+    const role = req.user.role;
     if (role === "customer") {
       res.status(403).json({ message: "Customers cannot change order shipment statuses" });
       return;
     }
 
     // If partner, verify they claimed this order, or allow admins to modify
-    if (role === "partner" && order.deliveryPartnerId !== req.user!.id) {
+    if (role === "partner" && order.deliveryPartnerId !== req.user.id) {
       // If order is unassigned, allowed to claim first. If claimed by someone else, block.
       if (order.deliveryPartnerId) {
         res.status(403).json({ message: "Cannot edit an order assigned to a separate delivery agent" });
@@ -265,7 +263,7 @@ export const updateOrderStatus = async (req: AuthenticatedRequest, res: Response
 };
 
 // 5. Admin Panel Stats & Analytics
-export const getAdminMetrics = async (req: AuthenticatedRequest, res: Response) => {
+export const getAdminMetrics = async (req, res) => {
   try {
     const orders = dbStore.getOrders();
     const products = dbStore.getProducts();
@@ -279,7 +277,7 @@ export const getAdminMetrics = async (req: AuthenticatedRequest, res: Response) 
     const ordersCount = orders.length;
 
     // Top-selling products calculator
-    const productSalesMap: Record<string, { title: string; quantity: number; sales: number }> = {};
+    const productSalesMap = {};
     orders.forEach((o) => {
       o.items.forEach((item) => {
         if (!productSalesMap[item.productId]) {
@@ -295,7 +293,7 @@ export const getAdminMetrics = async (req: AuthenticatedRequest, res: Response) 
       .slice(0, 5);
 
     // Sales by Category
-    const categorySalesMap: Record<string, number> = {};
+    const categorySalesMap = {};
     products.forEach((p) => {
       categorySalesMap[p.category] = 0;
     });
